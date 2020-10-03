@@ -1,12 +1,12 @@
 import React from 'react'
 
-import Theme from '../components/Theme'
+import Theme from '../../components/Theme'
 
-const NotFound = () => {
+const NotFoundPage = () => {
   return (
     <Theme>
       <h1>The page is not found</h1>
     </Theme>
   )
 }
-export default NotFound
+export default NotFoundPage

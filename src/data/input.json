@@ -1,16 +1,19 @@
 {
-  "recipes": [
+  "recipeList": [
     {
-      "name": "Indian recipes",
-      "dishes": ["Chickpea curry", "Samosa", "Biryani"]
+      "id": "0",
+      "recipeTypeTitle": "Indian recipes",
+      "recipes": ["Chickpea curry", "Samosa", "Biryani"]
     },
     {
-      "name": "Italian recipes",
-      "dishes": ["Pizza", "pasta", "Risotto"]
+      "id": "1",
+      "recipeTypeTitle": "Italian recipes",
+      "recipes": ["Pizza", "Pasta", "Risotto"]
     },
     {
-      "name": "Mexican recipes",
-      "dishes": ["Enchiladas", "Burrito", "Tacos"]
+      "id": "2",
+      "recipeTypeTitle": "Mexican recipes",
+      "recipes": ["Enchiladas", "Burrito", "Tacos"]
     }
   ]
 }
