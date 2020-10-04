@@ -7,6 +7,6 @@ endpoints: /history, /recipes
 
 yarn
 
-### Start App
+### Start App (start server first)
 
 yarn start

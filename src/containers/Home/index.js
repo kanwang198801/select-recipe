@@ -90,18 +90,19 @@ const Home = () => {
         return
       }
       postRequestHistory(newRecord, 'create')
+      clearForm()
     },
     [history]
   )
 
   const onRecipeTypeChange = useCallback(
-    // BUG: have to clear recipe
     (recipeTypeTitle) => {
       setSelectedRecipeType(
         recipeList.find(
           (recipeType) => recipeType.recipeTypeTitle === recipeTypeTitle
         )
       )
+      form.resetFields(['recipe'])
     },
     [recipeList]
   )
@@ -109,10 +110,6 @@ const Home = () => {
     postRequestHistory(existingUserNameData, 'replace')
     clearForm()
   }, [existingUserNameData])
-
-  const createNewSelection = useCallback(() => {
-    clearForm()
-  }, [])
 
   return (
     <Theme>
@@ -177,7 +174,7 @@ const Home = () => {
         centered
         visible={showModal}
         onOk={() => replaceExistingRecord()}
-        onCancel={() => createNewSelection()}
+        onCancel={() => clearForm()}
         okText="Replace Existing"
         cancelText="New Selection"
         width={320}
