@@ -1,15 +1,12 @@
+## App for Recipes
+
+send request to node server: http://localhost:7777/api
+endpoints: /history, /recipes
+
 ### Install
 
 yarn
 
-### Start app
+### Start App
 
 yarn start
-
-### Test app
-
-yarn test
-
-### Build app
-
-yarn build
