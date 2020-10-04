@@ -1,17 +1,14 @@
-import { Button, Form, Input, Modal, Select } from 'antd'
+import { Button, Form, Input, message, Modal, Select } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 
-// import writeJsonFile from 'write-json-file'
 import History from '../../components/History'
 import Theme from '../../components/Theme'
-import Data from '../../data/input.json'
-import { isUserNameUsed } from '../../utils'
+import { HISTORY_API, RECIPES_API } from '../../constants'
+import { isUserNameUsed, replaceExistingRecordByUserName } from '../../utils'
 
 const { Option } = Select
 
-// TODO:export/save to a json file
-// TODO:add options for existing username
 const Home = () => {
   const [recipeList, setRecipeList] = useState([])
   const [selectedRecipeType, setSelectedRecipeType] = useState(null)
@@ -22,14 +19,61 @@ const Home = () => {
   const showRecipes = selectedRecipeType && selectedRecipeType.recipes.length > 0
 
   useEffect(() => {
-    setRecipeList(Data.recipeList)
+    fetch(RECIPES_API)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data) {
+          setRecipeList(data.data)
+        }
+      })
+
+    fetch(HISTORY_API)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data) {
+          setHistory(data.data)
+        }
+      })
   }, [])
 
   const clearForm = useCallback(() => {
     form.resetFields()
     setExistingUserNameData(null)
     setSelectedRecipeType(null)
+    setShowModal(false)
   }, [])
+
+  const postRequestHistory = useCallback(
+    (newRecord, action) => {
+      fetch(HISTORY_API, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({ newRecord, action }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message === 'succuss') {
+            if (action === 'replace') {
+              setHistory(
+                replaceExistingRecordByUserName(history, existingUserNameData)
+              )
+            } else {
+              const newHistory = [...history, newRecord]
+              setHistory(newHistory)
+            }
+            message.success(data.message)
+          } else {
+            message.error(data.message)
+          }
+        })
+        .catch(() => {
+          message.error('API error')
+        })
+    },
+    [history, existingUserNameData]
+  )
 
   const onFinish = useCallback(
     async (values) => {
@@ -45,18 +89,13 @@ const Home = () => {
         setShowModal(true)
         return
       }
-      const newHistory = [...history, newRecord]
-      setHistory(newHistory)
-      clearForm()
-      // const writeJsonFile = require('write-json-file')
-      // ;(async () => {
-      //   await writeJsonFile('./output.json', newHistory)
-      // })()
+      postRequestHistory(newRecord, 'create')
     },
     [history]
   )
 
   const onRecipeTypeChange = useCallback(
+    // BUG: have to clear recipe
     (recipeTypeTitle) => {
       setSelectedRecipeType(
         recipeList.find(
@@ -66,19 +105,15 @@ const Home = () => {
     },
     [recipeList]
   )
-  const replaceExistingRecord = () => {
-    let newHistory = history.filter(
-      (record) => record.userName !== existingUserNameData.userName
-    )
-    newHistory = [...newHistory, existingUserNameData]
-    newHistory.push()
-    setHistory(newHistory)
-    setShowModal(false)
-  }
-  const createNewSelection = () => {
+  const replaceExistingRecord = useCallback(() => {
+    postRequestHistory(existingUserNameData, 'replace')
     clearForm()
-    setShowModal(false)
-  }
+  }, [existingUserNameData])
+
+  const createNewSelection = useCallback(() => {
+    clearForm()
+  }, [])
+
   return (
     <Theme>
       <Helmet>

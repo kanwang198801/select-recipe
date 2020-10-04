@@ -13,8 +13,7 @@
     "react-helmet": "^6.0.0",
     "react-html-parser": "^2.0.2",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
-    "write-json-file": "^4.3.0"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

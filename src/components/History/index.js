@@ -8,10 +8,10 @@ const History = ({ history }) => {
   return (
     <>
       {history.length > 0 && (
-        <>
+        <div className="mt-30">
           <h4>History</h4>
-          <Table dataSource={history} columns={schema} />
-        </>
+          <Table dataSource={history} columns={schema} rowKey="id" />
+        </div>
       )}
     </>
   )
